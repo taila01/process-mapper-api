@@ -52,6 +52,7 @@ cp .env.example .env
 
 3. **Subir os Containers:**
 ```bash
+```Primeiro composer install
 ./vendor/bin/sail up -d
 
 ```
