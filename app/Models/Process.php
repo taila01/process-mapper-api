@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\ProcessDetails;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder where(string $column, mixed $operator = null, mixed $value = null)
@@ -48,6 +49,6 @@ class Process extends Model
 
     public function details(): HasOne
     {
-        return $this->hasOne(ProcessDetail::class);
+        return $this->hasOne(ProcessDetails::class);
     }
 }

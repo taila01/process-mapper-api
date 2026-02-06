@@ -2,33 +2,23 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProcessResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         return [
-            'id'          => $this->id,
-            'name'        => (string) $this->name,
-            'description' => (string) $this->description,
-            'sectorId'    => $this->sector_id,
-            'parentId'    => $this->parent_id,
-            'type'        => $this->type,
-            'status'      => $this->status,
-
-            'details'  => new ProcessDetailsResource($this->whenLoaded('details')),
-            'sector'   => new SectorResource($this->whenLoaded('sector')),
+            'id' => $this->id,
+            'sector_id' => $this->sector_id,
+            'parent_id' => $this->parent_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'type' => $this->type,
+            'status' => $this->status,
+            'sector' => new SectorResource($this->whenLoaded('sector')),
+            'details' => new ProcessResource($this->whenLoaded('details')),
             'children' => ProcessResource::collection($this->whenLoaded('children')),
-
-            'createdAt' => $this->created_at?->toDateTimeString(),
-            'updatedAt' => $this->updated_at?->toDateTimeString(),
         ];
     }
 }
