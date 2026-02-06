@@ -1,153 +1,77 @@
-# Process Mapper API
+Process Mapper API 🚀
+Este projeto é uma API em Laravel para mapeamento de processos, configurada para rodar em ambiente Docker utilizando o Laravel Sail.
 
-API Laravel totalmente dockerizada usando **Docker Compose** para facilitar o setup do ambiente.
+🛠 Pré-requisitos
+Antes de começar, você precisará ter instalado em sua máquina:
 
----
+Docker Desktop ou Docker Engine.
 
-## Pré-requisitos
+Git.
 
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Git](https://git-scm.com/)
+📥 Instalação e Configuração
+Clonar o repositório:
 
----
+Bash
 
-## Passo 1: Clonar o projeto
-
-```bash
-git clone <URL_DO_SEU_REPOSITORIO>
+git clone https://github.com/seu-usuario/process-mapper-api.git
 cd process-mapper-api
-````
+Configurar o Ambiente (.env): Copie o arquivo de exemplo e ajuste as portas para evitar conflitos com serviços nativos do seu sistema (como MySQL ou Apache):
 
----
+Bash
 
-## Passo 2: Configurar variáveis de ambiente
-
-Crie o arquivo `.env` com base no `.env.example`:
-
-```bash
 cp .env.example .env
-```
+Certifique-se de que as seguintes linhas existam no seu .env:
 
-Altere as variáveis do banco de dados se necessário:
+Snippet de código
 
-```dotenv
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=process_mapper
-DB_USERNAME=root
-DB_PASSWORD=secret
-```
+APP_PORT=8080
+FORWARD_DB_PORT=33060 # Porta para acessar via HeidiSQL/DBeaver
+DB_PASSWORD=password
+Subir os Containers (Docker):
 
-> `DB_HOST=db` funciona porque o serviço MySQL no Docker Compose será chamado `db`.
+Bash
 
----
+./vendor/bin/sail up -d
+Nota: Se você tiver um MySQL rodando nativamente no Ubuntu, pare-o antes com sudo systemctl stop mysql para liberar a porta 3306.
 
-## Passo 3: Docker Compose
+Instalar Dependências e Gerar Key:
 
-### Arquivo `docker-compose.yml`
+Bash
 
-```yaml
-version: "3.9"
+./vendor/bin/sail composer install
+./vendor/bin/sail php artisan key:generate
+🗄 Importando o Banco de Dados
+Para que o projeto funcione com os dados já existentes, siga este passo a passo:
 
-services:
-  app:
-    build: .
-    container_name: process-mapper-api
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/var/www
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-      - DB_DATABASE=process_mapper
-      - DB_USERNAME=root
-      - DB_PASSWORD=secret
-    command: >
-      sh -c "composer install &&
-             php artisan migrate &&
-             php artisan serve --host=0.0.0.0 --port=8000"
+Localize o arquivo de backup (ex: database/backup_completo.sql).
 
-  db:
-    image: mysql:8.0
-    container_name: process-mapper-db
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: process_mapper
-    volumes:
-      - dbdata:/var/lib/mysql
+Com os containers rodando, execute o comando de importação:
 
-volumes:
-  dbdata:
-```
+Bash
 
----
+./vendor/bin/sail mysql < database/backup_completo.sql
+Isso criará todas as tabelas e inserirá os dados que foram exportados via HeidiSQL.
 
-## Passo 4: Rodar a aplicação
+🚀 Uso
+API: http://localhost:8080
 
-```bash
-docker-compose up -d
-```
+Conexão Banco (HeidiSQL/DBeaver):
 
-Isso vai:
+Host: 127.0.0.1
 
-1. Buildar a imagem do Laravel
-2. Subir o MySQL
-3. Rodar `composer install`
-4. Rodar `php artisan migrate`
-5. Iniciar o servidor Laravel na porta 8000
+Porta: 33060 (ou a definida em FORWARD_DB_PORT)
 
-Acesse a aplicação: [http://localhost:8000](http://localhost:8000)
+Usuário: sail
 
----
+Senha: password
 
-## Passo 5: Comandos úteis
+Banco: process_mapper
 
-* Parar tudo:
+🛑 Comandos Úteis do Sail
+Parar o projeto: ./vendor/bin/sail down
 
-```bash
-docker-compose down
-```
+Rodar Migrations: ./vendor/bin/sail php artisan migrate
 
-* Acessar o terminal do container Laravel:
+Ver status dos containers: ./vendor/bin/sail ps
 
-```bash
-docker-compose exec app bash
-```
-
-* Rodar migrations manualmente (caso necessário):
-
-```bash
-php artisan migrate
-```
-
-* Parar/reiniciar o container Laravel:
-
-```bash
-docker-compose restart app
-```
-
-* Ver logs em tempo real:
-
-```bash
-docker-compose logs -f
-```
-
----
-
-## Observações
-
-* Todo o ambiente de desenvolvimento é replicável em qualquer computador que tenha Docker + Compose.
-* O banco de dados fica persistente no volume `dbdata`.
-* Se quiser mudar a porta da aplicação, altere `8000:8000` no `docker-compose.yml`.
-
----
-
-## Conclusão
-
-Com Docker Compose, basta clonar, ajustar `.env`, e rodar `docker-compose up -d`. A aplicação e o banco de dados estarão funcionando sem precisar instalar PHP, Composer ou MySQL localmente.
+Dicas Finais:
