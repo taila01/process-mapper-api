@@ -3,14 +3,14 @@
 Solução completa para mapeamento de processos com **API em Laravel** e **frontend em React/Next.js**.
 
 ---
+O projeto foi desenvolvido com as seguintes tecnologias:
 
-## Tecnologias
-
-- Laravel  
-- Next.js  
-- Docker  
-- React Flow  
-- Node.js  
+* ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+* ![Next.js](https://img.shields.io/badge/Next.js-000?style=for-the-badge&logo=next.js&logoColor=white)
+* ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+* ![React Flow](https://img.shields.io/badge/React%20Flow-FF0073?style=for-the-badge&logo=react&logoColor=white)
+* ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+* ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ---
 
